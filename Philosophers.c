@@ -53,7 +53,7 @@ void* routine(void *arg) {
 	    pthread_mutex_lock(&g->mutex_forks[number_p]);
 	else
 	{
-		if (number_p == g->g[0] - 1)
+		if (number_p == (g->g[0] - 1))
 			pthread_mutex_lock(&g->mutex_forks[0]);
 		else
 			pthread_mutex_lock(&g->mutex_forks[number_p + 1]);
@@ -62,7 +62,7 @@ void* routine(void *arg) {
 	printf("%d has taken a fork\n", number_p + 1);
 	if(number_p % 2 == 0)
 	{
-		 if (number_p == g->g[0] - 1)
+		 if (number_p == (g->g[0] - 1))
 		 pthread_mutex_lock(&g->mutex_forks[0]);
 		else
 		 pthread_mutex_lock(&g->mutex_forks[number_p + 1]);
@@ -77,14 +77,14 @@ void* routine(void *arg) {
 
 	else
 	{
-		if (number_p == g->g[0] - 1)
+		if (number_p == (g->g[0] - 1))
 			pthread_mutex_unlock(&g->mutex_forks[0]);
 		else
 			pthread_mutex_unlock(&g->mutex_forks[number_p + 1]);
 	}
 	if(number_p % 2 == 0)
 	{
-		if (number_p == g->g[0] - 1)
+		if (number_p == (g->g[0] - 1))
 			pthread_mutex_unlock(&g->mutex_forks[0]);
 		else
 			pthread_mutex_unlock(&g->mutex_forks[number_p + 1]);
@@ -98,6 +98,7 @@ void* routine(void *arg) {
 int main (int argc, char ** argv)
 {
 	t_general	g;
+	t_thread_data *data;
 
 
 	g.i = 0;
@@ -122,21 +123,28 @@ int main (int argc, char ** argv)
 		g.i ++;
 		}
 		g.i = 0;
-		g.philosophers = malloc(sizeof(int) * g.g[0]);
-		g.mutex_forks = malloc(sizeof(pthread_mutex_t) * g.g[0]);
+		g.philosophers = ft_calloc(sizeof(int) * g.g[0], 1);
+		g.mutex_forks = ft_calloc(sizeof(pthread_mutex_t) * g.g[0], 1);
 		while(g.i < g.g[0])
 		{
 			pthread_mutex_init(&g.mutex_forks[g.i] , NULL);
 			g.i ++;
 		}
+			 data = ft_calloc(sizeof(t_thread_data ) * g.g[0], 1);
+			g.i = 0;
+		while (g.i < g.g[0])
+		{
 
+        data[g.i].general = &g;
+        data[g.i].number_p = g.i;
+		g.i ++;
+		}
 		g.i = 0;
 		while (g.i < g.g[0])
 		{
-			 t_thread_data *data = malloc(sizeof(t_thread_data));
-        data->general = &g;
-        data->number_p = g.i;
-       if( pthread_create(&g.philosophers[g.i], NULL, routine, data) != 0)
+
+
+       if( pthread_create(&g.philosophers[g.i], NULL, routine, &data[g.i]) != 0)
 	   		return (1);
 		g.i ++;
 		}
