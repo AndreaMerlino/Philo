@@ -46,9 +46,12 @@ int	max_min(char **argv)
 }
 
 void* routine(void *arg) {
+
 	 t_thread_data *data = (t_thread_data*)arg;
+	 pthread_mutex_lock(data->mutex_data);
     t_general *g = data->general;
     int number_p = data->number_p;
+	pthread_mutex_unlock(data->mutex_data);
 	if(number_p % 2 == 0)
 	    pthread_mutex_lock(&g->mutex_forks[number_p]);
 	else
@@ -99,6 +102,7 @@ int main (int argc, char ** argv)
 {
 	t_general	g;
 	t_thread_data *data;
+		pthread_mutex_t d;
 
 
 	g.i = 0;
@@ -130,6 +134,7 @@ int main (int argc, char ** argv)
 			pthread_mutex_init(&g.mutex_forks[g.i] , NULL);
 			g.i ++;
 		}
+		pthread_mutex_init(&d, NULL);
 			 data = ft_calloc(sizeof(t_thread_data ) * g.g[0], 1);
 			g.i = 0;
 		while (g.i < g.g[0])
@@ -137,6 +142,7 @@ int main (int argc, char ** argv)
 
         data[g.i].general = &g;
         data[g.i].number_p = g.i;
+		data[g.i].mutex_data = &d;
 		g.i ++;
 		}
 		g.i = 0;
@@ -161,4 +167,5 @@ int main (int argc, char ** argv)
 			 pthread_mutex_destroy(&g.mutex_forks[g.i]);
 			g.i ++;
 		}
+
 }
