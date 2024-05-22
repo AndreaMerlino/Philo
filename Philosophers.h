@@ -16,7 +16,6 @@ typedef struct s_general {
 typedef struct s_thread_data {
     t_general *general;
     int number_p;
-	pthread_mutex_t *mutex_data;
 } t_thread_data;
 
 size_t	ft_strlen(const char *s);

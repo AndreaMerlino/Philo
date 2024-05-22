@@ -48,62 +48,62 @@ int	max_min(char **argv)
 void* routine(void *arg) {
 
 	 t_thread_data *data = (t_thread_data*)arg;
-	 pthread_mutex_lock(data->mutex_data);
     t_general *g = data->general;
-    int number_p = data->number_p;
-	pthread_mutex_unlock(data->mutex_data);
-	if(number_p % 2 == 0)
-	    pthread_mutex_lock(&g->mutex_forks[number_p]);
+	while(1)
+	{
+	if(data->number_p % 2 == 0)
+	    pthread_mutex_lock(&g->mutex_forks[data->number_p ]);
 	else
 	{
-		if (number_p == (g->g[0] - 1))
+		if (data->number_p == (g->g[0] - 1))
 			pthread_mutex_lock(&g->mutex_forks[0]);
 		else
-			pthread_mutex_lock(&g->mutex_forks[number_p + 1]);
+			pthread_mutex_lock(&g->mutex_forks[data->number_p  + 1]);
 
 	}
-	printf("%d has taken a fork\n", number_p + 1);
-	if(number_p % 2 == 0)
+	printf("%d has taken a fork\n", data->number_p + 1);
+	if(data->number_p % 2 == 0)
 	{
-		 if (number_p == (g->g[0] - 1))
+		 if (data->number_p == (g->g[0] - 1))
 		 pthread_mutex_lock(&g->mutex_forks[0]);
 		else
-		 pthread_mutex_lock(&g->mutex_forks[number_p + 1]);
+		 pthread_mutex_lock(&g->mutex_forks[data->number_p + 1]);
 	}
 	else
-		pthread_mutex_lock(&g->mutex_forks[number_p]);
-	printf("%d has taken a fork\n", number_p + 1);
-	printf("%d is eating \n", number_p + 1);
-	usleep(g->g[2]);
-	if(number_p % 2 == 0)
-		pthread_mutex_unlock(&g->mutex_forks[number_p]);
+		pthread_mutex_lock(&g->mutex_forks[data->number_p ]);
+	printf("%d has taken a fork\n", data->number_p + 1);
+	printf("%d is eating \n", data->number_p  + 1);
+	usleep(g->g[2] * 1000);
+	if(data->number_p  % 2 == 0)
+		pthread_mutex_unlock(&g->mutex_forks[data->number_p ]);
 
 	else
 	{
-		if (number_p == (g->g[0] - 1))
+		if (data->number_p  == (g->g[0] - 1))
 			pthread_mutex_unlock(&g->mutex_forks[0]);
 		else
-			pthread_mutex_unlock(&g->mutex_forks[number_p + 1]);
+			pthread_mutex_unlock(&g->mutex_forks[data->number_p  + 1]);
 	}
-	if(number_p % 2 == 0)
+	if(data->number_p  % 2 == 0)
 	{
-		if (number_p == (g->g[0] - 1))
+		if (data->number_p == (g->g[0] - 1))
 			pthread_mutex_unlock(&g->mutex_forks[0]);
 		else
-			pthread_mutex_unlock(&g->mutex_forks[number_p + 1]);
+			pthread_mutex_unlock(&g->mutex_forks[data->number_p + 1]);
 	}
 	else
-	pthread_mutex_unlock(&g->mutex_forks[number_p]);
-    printf("%d Ending thread\n",number_p + 1);
-	free(data);
+	pthread_mutex_unlock(&g->mutex_forks[data->number_p ]);
+    printf("%d is sleeping \n",data->number_p  + 1);
+	usleep(g->g[3] * 1000);
+	printf("%d is thinking \n",data->number_p  + 1);
+}
 }
 
 int main (int argc, char ** argv)
 {
 	t_general	g;
 	t_thread_data *data;
-		pthread_mutex_t d;
-
+	t_thread_data *data2;
 
 	g.i = 0;
 	if(argc != 6 && argc != 5)
@@ -134,15 +134,12 @@ int main (int argc, char ** argv)
 			pthread_mutex_init(&g.mutex_forks[g.i] , NULL);
 			g.i ++;
 		}
-		pthread_mutex_init(&d, NULL);
 			 data = ft_calloc(sizeof(t_thread_data ) * g.g[0], 1);
 			g.i = 0;
 		while (g.i < g.g[0])
 		{
-
         data[g.i].general = &g;
         data[g.i].number_p = g.i;
-		data[g.i].mutex_data = &d;
 		g.i ++;
 		}
 		g.i = 0;
@@ -167,5 +164,7 @@ int main (int argc, char ** argv)
 			 pthread_mutex_destroy(&g.mutex_forks[g.i]);
 			g.i ++;
 		}
-
+		free(data);
+		free(g.philosophers);
+		free(g.mutex_forks);
 }
