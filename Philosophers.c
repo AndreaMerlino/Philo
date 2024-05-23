@@ -49,7 +49,7 @@ void* routine(void *arg) {
 
 	 t_thread_data *data = (t_thread_data*)arg;
     t_general *g = data->general;
-	while(1)
+	while(data->eat > 0)
 	{
 	if(data->number_p % 2 == 0)
 	    pthread_mutex_lock(&g->mutex_forks[data->number_p ]);
@@ -96,6 +96,7 @@ void* routine(void *arg) {
     printf("%d is sleeping \n",data->number_p  + 1);
 	usleep(g->g[3] * 1000);
 	printf("%d is thinking \n",data->number_p  + 1);
+	data->eat -= 1;
 }
 }
 
@@ -103,7 +104,7 @@ int main (int argc, char ** argv)
 {
 	t_general	g;
 	t_thread_data *data;
-	t_thread_data *data2;
+
 
 	g.i = 0;
 	if(argc != 6 && argc != 5)
@@ -140,6 +141,7 @@ int main (int argc, char ** argv)
 		{
         data[g.i].general = &g;
         data[g.i].number_p = g.i;
+		data[g.i].eat = g.g[4];
 		g.i ++;
 		}
 		g.i = 0;

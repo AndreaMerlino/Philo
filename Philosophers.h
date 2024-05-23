@@ -7,7 +7,7 @@
 # include <unistd.h>
 
 typedef struct s_general {
-    int g[5];
+    int g[6];
     int i;
     pthread_t *philosophers;
     pthread_mutex_t *mutex_forks;
@@ -16,6 +16,7 @@ typedef struct s_general {
 typedef struct s_thread_data {
     t_general *general;
     int number_p;
+	int eat;
 } t_thread_data;
 
 size_t	ft_strlen(const char *s);
