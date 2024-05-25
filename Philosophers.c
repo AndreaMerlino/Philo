@@ -61,7 +61,7 @@ void* routine(void *arg) {
 			pthread_mutex_lock(&g->mutex_forks[data->number_p  + 1]);
 
 	}
-	printf("%d has taken a fork\n", data->number_p + 1);
+	printf("%llu %d has taken a fork\n", get_time() - g->start,  data->number_p + 1);
 	if(data->number_p % 2 == 0)
 	{
 		 if (data->number_p == (g->g[0] - 1))
@@ -71,8 +71,8 @@ void* routine(void *arg) {
 	}
 	else
 		pthread_mutex_lock(&g->mutex_forks[data->number_p ]);
-	printf("%d has taken a fork\n", data->number_p + 1);
-	printf("%d is eating \n", data->number_p  + 1);
+	printf("%llu %d has taken a fork\n", get_time() - g->start,  data->number_p + 1);
+	printf("%llu %d is eating \n",get_time() - g->start,  data->number_p + 1);
 	usleep(g->g[2] * 1000);
 	if(data->number_p  % 2 == 0)
 		pthread_mutex_unlock(&g->mutex_forks[data->number_p ]);
@@ -93,9 +93,9 @@ void* routine(void *arg) {
 	}
 	else
 	pthread_mutex_unlock(&g->mutex_forks[data->number_p ]);
-    printf("%d is sleeping \n",data->number_p  + 1);
+    printf("%llu %d is sleeping \n",get_time() - g->start,  data->number_p + 1);
 	usleep(g->g[3] * 1000);
-	printf("%d is thinking \n",data->number_p  + 1);
+	printf("%llu %d is thinking \n",get_time() - g->start,  data->number_p + 1);
 	data->eat -= 1;
 }
 }
@@ -104,7 +104,6 @@ int main (int argc, char ** argv)
 {
 	t_general	g;
 	t_thread_data *data;
-
 
 	g.i = 0;
 	if(argc != 6 && argc != 5)
@@ -130,28 +129,31 @@ int main (int argc, char ** argv)
 		g.i = 0;
 		g.philosophers = ft_calloc(sizeof(int) * g.g[0], 1);
 		g.mutex_forks = ft_calloc(sizeof(pthread_mutex_t) * g.g[0], 1);
+		g.start = get_time();
 		while(g.i < g.g[0])
 		{
-			pthread_mutex_init(&g.mutex_forks[g.i] , NULL);
+			if(pthread_mutex_init(&g.mutex_forks[g.i] , NULL) != 0)
+				return(2);
 			g.i ++;
 		}
-			 data = ft_calloc(sizeof(t_thread_data ) * g.g[0], 1);
-			g.i = 0;
+		data = ft_calloc(sizeof(t_thread_data ) * g.g[0], 1);
+		g.i = 0;
 		while (g.i < g.g[0])
 		{
         data[g.i].general = &g;
         data[g.i].number_p = g.i;
+		if(argc == 6)
 		data[g.i].eat = g.g[4];
+		else
+		data[g.i].eat = 2147483647 ;
 		g.i ++;
 		}
 		g.i = 0;
 		while (g.i < g.g[0])
 		{
-
-
-       if( pthread_create(&g.philosophers[g.i], NULL, routine, &data[g.i]) != 0)
-	   		return (1);
-		g.i ++;
+			if( pthread_create(&g.philosophers[g.i], NULL, routine, &data[g.i]) != 0)
+				return (1);
+			g.i ++;
 		}
 		g.i = 0;
 		while (g.i < g.g[0])

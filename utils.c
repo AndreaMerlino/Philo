@@ -66,3 +66,13 @@ void	*ft_calloc(size_t count, size_t size)
 		((char *)ptr)[bytes] = 0;
 	return (ptr);
 }
+
+u_int64_t	get_time(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL))
+	exit;
+		//return (error("gettimeofday() FAILURE\n", NULL));
+	return ((tv.tv_sec * (u_int64_t)1000) + (tv.tv_usec / 1000));
+}
