@@ -45,12 +45,40 @@ int	max_min(char **argv)
 	return (0);
 }
 
+void *monitor(void *args) {
+   t_thread_data *data = (t_thread_data*)args;
+t_general *g = data->general;
+   int i;
+   int should_break = 0;
+    while (1) {
+		i = 0;
+		while( i < g->g[0])
+     {
+
+		if ((get_time() - data[i].last_meal) >= (uint64_t) (g->g[1]))
+			{
+				should_break = 1;
+				 g->dead = 1;
+				printf("%llu %d died\n", get_time() - g->start,  data->number_p + 1);
+				break;
+			}
+			i++;
+        }
+		if (should_break > 0)
+			break;
+        usleep(1000);
+    }
+}
+
 void* routine(void *arg) {
 
 	 t_thread_data *data = (t_thread_data*)arg;
     t_general *g = data->general;
+
 	while(data->eat > 0)
 	{
+		if (g->dead)
+            break;
 	if(data->number_p % 2 == 0)
 	    pthread_mutex_lock(&g->mutex_forks[data->number_p ]);
 	else
@@ -61,6 +89,8 @@ void* routine(void *arg) {
 			pthread_mutex_lock(&g->mutex_forks[data->number_p  + 1]);
 
 	}
+	if (g->dead)
+            break;
 	printf("%llu %d has taken a fork\n", get_time() - g->start,  data->number_p + 1);
 	if(data->number_p % 2 == 0)
 	{
@@ -71,9 +101,17 @@ void* routine(void *arg) {
 	}
 	else
 		pthread_mutex_lock(&g->mutex_forks[data->number_p ]);
+		if (g->dead)
+            break;
 	printf("%llu %d has taken a fork\n", get_time() - g->start,  data->number_p + 1);
+	data->last_meal = get_time();
 	printf("%llu %d is eating \n",get_time() - g->start,  data->number_p + 1);
+if (g->dead)
+            break;
 	usleep(g->g[2] * 1000);
+
+if (g->dead)
+            break;
 	if(data->number_p  % 2 == 0)
 		pthread_mutex_unlock(&g->mutex_forks[data->number_p ]);
 
@@ -93,8 +131,12 @@ void* routine(void *arg) {
 	}
 	else
 	pthread_mutex_unlock(&g->mutex_forks[data->number_p ]);
+	if (g->dead)
+            break;
     printf("%llu %d is sleeping \n",get_time() - g->start,  data->number_p + 1);
 	usleep(g->g[3] * 1000);
+	if (g->dead)
+            break;
 	printf("%llu %d is thinking \n",get_time() - g->start,  data->number_p + 1);
 	data->eat -= 1;
 }
@@ -130,6 +172,7 @@ int main (int argc, char ** argv)
 		g.philosophers = ft_calloc(sizeof(int) * g.g[0], 1);
 		g.mutex_forks = ft_calloc(sizeof(pthread_mutex_t) * g.g[0], 1);
 		g.start = get_time();
+		g.dead = 0;
 		while(g.i < g.g[0])
 		{
 			if(pthread_mutex_init(&g.mutex_forks[g.i] , NULL) != 0)
@@ -142,19 +185,19 @@ int main (int argc, char ** argv)
 		{
         data[g.i].general = &g;
         data[g.i].number_p = g.i;
-		if(argc == 6)
-		data[g.i].eat = g.g[4];
-		else
-		data[g.i].eat = 2147483647 ;
+		data[g.i].eat = (argc == 6) ? g.g[4] : 2147483647;
+		data[g.i].last_meal = g.start;
 		g.i ++;
 		}
 		g.i = 0;
+		pthread_create(&g.monitor, NULL, monitor, data);
 		while (g.i < g.g[0])
 		{
 			if( pthread_create(&g.philosophers[g.i], NULL, routine, &data[g.i]) != 0)
 				return (1);
 			g.i ++;
 		}
+		 pthread_join(g.monitor, NULL);
 		g.i = 0;
 		while (g.i < g.g[0])
 		{
