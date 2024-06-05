@@ -1,5 +1,15 @@
 #include "Philosophers.h"
 
+int	ft_usleep(size_t milliseconds)
+{
+	size_t	start;
+
+	start = get_time();
+	while ((get_time() - start) < milliseconds)
+		usleep(100);
+	return (0);
+}
+
 int	string_checker(char **argv)
 {
 	char	*temp;
@@ -45,6 +55,26 @@ int	max_min(char **argv)
 	return (0);
 }
 
+void *monitor2(void *args)
+{
+	t_thread_data *data = (t_thread_data*)args;
+	t_general *g = data->general;
+	int i;
+	while(g->eat_times > 0)
+	{
+		i = 0;
+		while (i < g->g[0])
+		{
+			if(i == 0)
+				g->eat_times = 0;
+			g->eat_times += data[i].eat;
+			i ++;
+		}
+		 usleep(1000);
+	}
+
+
+}
 void *monitor(void *args) {
    t_thread_data *data = (t_thread_data*)args;
 t_general *g = data->general;
@@ -55,14 +85,21 @@ t_general *g = data->general;
 		while( i < g->g[0])
      {
 
-		if ((get_time() - data[i].last_meal) >= (uint64_t) (g->g[1]))
+		if ((get_time() - data[i].last_meal) > (uint64_t) (g->g[1]))
 			{
+
 				should_break = 1;
 				 g->dead = 1;
-				printf("%llu %d died\n", get_time() - g->start,  data->number_p + 1);
+				printf("%llu %d died\n", get_time() - g->start,  data[i].number_p + 1);
 				break;
 			}
+			if(g->eat_times < 1)
+				{
+					should_break = 1;
+					break;
+				}
 			i++;
+
         }
 		if (should_break > 0)
 			break;
@@ -75,10 +112,8 @@ void* routine(void *arg) {
 	 t_thread_data *data = (t_thread_data*)arg;
     t_general *g = data->general;
 
-	while(data->eat > 0)
+	while( g->eat_times > 0 || data->eat > 0)
 	{
-		if (g->dead)
-            break;
 	if(data->number_p % 2 == 0)
 	    pthread_mutex_lock(&g->mutex_forks[data->number_p ]);
 	else
@@ -104,14 +139,14 @@ void* routine(void *arg) {
 		if (g->dead)
             break;
 	printf("%llu %d has taken a fork\n", get_time() - g->start,  data->number_p + 1);
+
 	data->last_meal = get_time();
+
 	printf("%llu %d is eating \n",get_time() - g->start,  data->number_p + 1);
 if (g->dead)
             break;
-	usleep(g->g[2] * 1000);
+	ft_usleep(g->g[2]);
 
-if (g->dead)
-            break;
 	if(data->number_p  % 2 == 0)
 		pthread_mutex_unlock(&g->mutex_forks[data->number_p ]);
 
@@ -134,7 +169,7 @@ if (g->dead)
 	if (g->dead)
             break;
     printf("%llu %d is sleeping \n",get_time() - g->start,  data->number_p + 1);
-	usleep(g->g[3] * 1000);
+	ft_usleep(g->g[3]);
 	if (g->dead)
             break;
 	printf("%llu %d is thinking \n",get_time() - g->start,  data->number_p + 1);
@@ -173,12 +208,15 @@ int main (int argc, char ** argv)
 		g.mutex_forks = ft_calloc(sizeof(pthread_mutex_t) * g.g[0], 1);
 		g.start = get_time();
 		g.dead = 0;
+		g.eat_times =1;
 		while(g.i < g.g[0])
 		{
 			if(pthread_mutex_init(&g.mutex_forks[g.i] , NULL) != 0)
 				return(2);
 			g.i ++;
 		}
+		g.i = 0;
+
 		data = ft_calloc(sizeof(t_thread_data ) * g.g[0], 1);
 		g.i = 0;
 		while (g.i < g.g[0])
@@ -190,14 +228,20 @@ int main (int argc, char ** argv)
 		g.i ++;
 		}
 		g.i = 0;
+		if(argc == 6)
+			pthread_create(&g.monitor2, NULL, monitor2, data);
 		pthread_create(&g.monitor, NULL, monitor, data);
+
 		while (g.i < g.g[0])
 		{
 			if( pthread_create(&g.philosophers[g.i], NULL, routine, &data[g.i]) != 0)
 				return (1);
 			g.i ++;
 		}
+		if(argc == 6)
+		pthread_join(g.monitor2, NULL);
 		 pthread_join(g.monitor, NULL);
+
 		g.i = 0;
 		while (g.i < g.g[0])
 		{

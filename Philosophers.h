@@ -13,8 +13,10 @@ typedef struct s_general
 	int				i;
 	pthread_t		*philosophers;
 	pthread_t		monitor;
+	pthread_t		monitor2;
 	pthread_mutex_t	*mutex_forks;
 	u_int64_t		start;
+	int eat_times;
 	int dead;
 } t_general;
 
@@ -23,6 +25,7 @@ typedef struct s_thread_data {
     int	number_p;
 	int	eat;
 	u_int64_t		last_meal;
+
 } t_thread_data;
 
 size_t		ft_strlen(const char *s);
