@@ -174,6 +174,7 @@ if (g->dead)
             break;
 	printf("%llu %d is thinking \n",get_time() - g->start,  data->number_p + 1);
 	data->eat -= 1;
+	usleep(100);
 }
 }
 
