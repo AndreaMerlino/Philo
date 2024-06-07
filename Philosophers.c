@@ -72,8 +72,7 @@ void *monitor2(void *args)
 		}
 		 usleep(1000);
 	}
-
-
+	return (NULL);
 }
 void *monitor(void *args) {
    t_thread_data *data = (t_thread_data*)args;
@@ -105,6 +104,7 @@ t_general *g = data->general;
 			break;
         usleep(1000);
     }
+	return (NULL);
 }
 
 void* routine(void *arg) {
@@ -176,6 +176,7 @@ if (g->dead)
 	data->eat -= 1;
 	usleep(100);
 }
+return (NULL);
 }
 
 int main (int argc, char ** argv)

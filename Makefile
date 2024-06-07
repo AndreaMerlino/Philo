@@ -2,7 +2,7 @@ NAME := philo
 
 OBJS := Philosophers.o  utils.o
 
-FLAGS :=  -g -pthread
+FLAGS :=  -Wall -Werror -Wextra -g -pthread
 
 #COLORS
 RED = \033[1;31m
