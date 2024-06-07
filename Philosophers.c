@@ -236,7 +236,6 @@ int main (int argc, char ** argv)
 
 		while (g.i < g.g[0])
 		{
-			printf("the size of philosopher %d is %lu and data is %lu \n",g.i +1,  sizeof(g.philosophers[g.i]),sizeof(data[g.i]) );
 			if( pthread_create(&g.philosophers[g.i], NULL, routine, &data[g.i]) != 0)
 				return (1);
 			g.i ++;
