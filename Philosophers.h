@@ -6,10 +6,11 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
+# include <stdint.h>
 
 typedef struct s_general
 {
-	int				g[6];
+	int				g[5];
 	int				i;
 	pthread_t		*philosophers;
 	pthread_t		monitor;

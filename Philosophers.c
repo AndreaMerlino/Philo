@@ -206,7 +206,7 @@ int main (int argc, char ** argv)
 		g.i ++;
 		}
 		g.i = 0;
-		g.philosophers = ft_calloc(sizeof(int) * g.g[0], 1);
+		g.philosophers = ft_calloc(sizeof(pthread_t) * g.g[0], 1);
 		g.mutex_forks = ft_calloc(sizeof(pthread_mutex_t) * g.g[0], 1);
 		g.start = get_time();
 		g.dead = 0;
@@ -236,6 +236,7 @@ int main (int argc, char ** argv)
 
 		while (g.i < g.g[0])
 		{
+			printf("the size of philosopher %d is %lu and data is %lu \n",g.i +1,  sizeof(g.philosophers[g.i]),sizeof(data[g.i]) );
 			if( pthread_create(&g.philosophers[g.i], NULL, routine, &data[g.i]) != 0)
 				return (1);
 			g.i ++;
