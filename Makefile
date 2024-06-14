@@ -1,6 +1,6 @@
 NAME := philo
 
-OBJS := Philosophers.o  utils.o
+OBJS := Philosophers.o  utils.o checker.o init.o routine.o monitor.o
 
 FLAGS :=  -Wall -Werror -Wextra -g -pthread
 

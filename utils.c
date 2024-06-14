@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: andreamerlino <andreamerlino@student.42    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/14 22:29:08 by andreamerli       #+#    #+#             */
+/*   Updated: 2024/06/14 22:38:16 by andreamerli      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Philosophers.h"
 
 size_t	ft_strlen(const char *s)
@@ -72,7 +84,5 @@ u_int64_t	get_time(void)
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-
-		//return (error("gettimeofday() FAILURE\n", NULL));
 	return ((tv.tv_sec * (u_int64_t)1000) + (tv.tv_usec / 1000));
 }
