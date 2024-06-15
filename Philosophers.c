@@ -6,7 +6,7 @@
 /*   By: andreamerlino <andreamerlino@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 20:33:47 by andreamerli       #+#    #+#             */
-/*   Updated: 2024/06/14 20:52:21 by andreamerli      ###   ########.fr       */
+/*   Updated: 2024/06/15 11:59:49 by andreamerli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int argc, char **argv)
 	t_general		g;
 	t_thread_data	*data;
 
+	g.should_break = 0;
 	g.i = 0;
 	if (argc != 6 && argc != 5)
 	{
