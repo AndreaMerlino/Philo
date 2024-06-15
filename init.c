@@ -6,7 +6,7 @@
 /*   By: andreamerlino <andreamerlino@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 20:52:25 by andreamerli       #+#    #+#             */
-/*   Updated: 2024/06/14 22:27:03 by andreamerli      ###   ########.fr       */
+/*   Updated: 2024/06/15 11:56:04 by andreamerli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,5 @@ void	destroy_free(t_general *g, t_thread_data *data)
 	free(data);
 	free(g->philosophers);
 	free(g->mutex_forks);
+	free(g->mutex_eat);
 }
