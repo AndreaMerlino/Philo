@@ -5,6 +5,7 @@
   <a href="https://en.wikipedia.org/wiki/Dining_philosophers_problem" target="_blank" > More info on Wikipedia.</a>
   </figcaption> 
 </figure>
+<section>
 <h2>The 42 project philosophers </h2> 
 <h3> Overview: </h3>
  <img src="img/42" width="400" height="300" alt=" 42 School">
@@ -53,3 +54,4 @@
    <p><strong>N.B.</strong>Replace timestamp_in_ms with the current timestamp in milliseconds and X with the philosopher number. • A displayed state message should not be mixed up with another message. • A message announcing a philosopher died should be displayed no more than 10 ms after the actual death of the philosopher. • Again, philosophers should avoid dying!</p> 
   <img src="img/images.png" width="30" height="30" alt="Danger">Your program must not have any data races.
 </ul>
+</section>
