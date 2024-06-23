@@ -43,3 +43,6 @@
 <li>Each philosopher has a number ranging from 1 to number_of_philosophers.</li>
 <li>Philosopher number 1 sits next to philosopher number number_of_philosophers. Any other philosopher number N sits between philosopher number N - 1 and philoso- pher number N + 1.</li>
 </ul>
+<h3></h3>About logs of the program:</h3>
+<ul> <h4>Any state change of a philosopher must be formatted as follows:</h4> ◦ timestamp_in_ms X has taken a fork ◦ timestamp_in_ms X is eating ◦ timestamp_in_ms X is sleeping ◦ timestamp_in_ms X is thinking ◦ timestamp_in_ms X died Replace timestamp_in_ms with the current timestamp in milliseconds and X with the philosopher number. • A displayed state message should not be mixed up with another message. • A message announcing a philosopher died should be displayed no more than 10 ms after the actual death of the philosopher. • Again, philosophers should avoid dying! Your program must not have any data races.
+</ul>
