@@ -1,12 +1,12 @@
-<h1>Philosophers</h1>
+ <h1>Philosophers</h1>
 <figure>
   <img src="https://austingwalters.com/wp-content/uploads/2014/05/Dining_philosophers.png" width="800" height="800 alt=" 5 Philosophers">
   <figcaption><strong>In computer science, the dining philosophers problem is an example problem often used in concurrent algorithm design to illustrate synchronization issues and techniques for resolving them. </strong>
   <a href="https://en.wikipedia.org/wiki/Dining_philosophers_problem" target="_blank" > More info on Wikipedia.</a>
   </figcaption> 
 </figure>
-<h2>Overview: </h2> 
-<h3> The 42 project philosophers </h3>
+<h2>The 42 project philosophers </h2> 
+<h3> Overview: </h3>
  <img src="img/42" width="400" height="300" alt=" 42 School">
 <p> Here are the things you need to know if you want to succeed this assignment:</p>
 <ul>
@@ -51,5 +51,5 @@
   <li>timestamp_in_ms X is thinking</li>
   <li>timestamp_in_ms X died </li>
    <p><strong>N.B.</strong>Replace timestamp_in_ms with the current timestamp in milliseconds and X with the philosopher number. • A displayed state message should not be mixed up with another message. • A message announcing a philosopher died should be displayed no more than 10 ms after the actual death of the philosopher. • Again, philosophers should avoid dying!</p> 
-  Your program must not have any data races.
+  <img src="img/images.png" width="30" height="30" alt="Danger">Your program must not have any data races.
 </ul>
